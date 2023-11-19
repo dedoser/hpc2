@@ -185,12 +185,13 @@ double** init_b(double** B, double h1, double h2, int M, int N, int A1, int A2) 
 
 
 int main(int argc, char **argv) {
-    if (argc != 3) {
-        printf("Wrong amount of arguments\n");
-        return 1;
-    }
+    // if (argc != 3) {
+    //     printf("Wrong amount of arguments\n");
+    //     return 1;
+    // }
     const size_t M = atoi(argv[1]);
     const size_t N = atoi(argv[2]);
+    const int lim = atoi(argv[3]);
 
     double A1 = -3.0;
     double B1 = 3.0;
@@ -232,9 +233,19 @@ int main(int argc, char **argv) {
         tau_r = mul_matrix(r, tau_r, tau, M, N);
         w_next = minus(w, tau_r, w_next, M, N);
         diff = sqrt(scalar_mul(tau_r, tau_r, M, N, h1, h2));
+        // printf("%.10f\n", diff);
+        if (count < lim) {
+            continue;
+        } else if (count >= lim && count < lim + 10000) {
+            if (count % 2 == 1) {
+                printf("%.10f\n", diff);
+            }
+        } else {
+            break;
+        }
     }
 
-    printf("Time - %fsec\n", (omp_get_wtime() - start));
+    // printf("Time - %fsec\n", (omp_get_wtime() - start));
 
     // printf("(r, r) - %f\n", sqrt(scalar_mul(A_r, r, M, N, h1, h2)));
     // printf("(Ar, Ar) - %f\n", sqrt(scalar_mul(A_r, A_r, M, N, h1, h2)));
